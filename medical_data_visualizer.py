@@ -26,7 +26,8 @@ def calc_overweight(height_cm, weight_kg):
 df['overweight'] = df.apply(lambda row: calc_overweight(row['height'],row['weight']), axis=1)
 
 # Normalize data by making 0 always good and 1 always bad. If the value of 'cholesterol' or 'gluc' is 1, make the value 0. If the value is more than 1, make the value 1.
-
+df['cholesterol'] = (df['cholesterol'] > 1).astype(int)
+df['gluc'] = (df['gluc'] > 1).astype(int)
 
 # Draw Categorical Plot
 def draw_cat_plot():
