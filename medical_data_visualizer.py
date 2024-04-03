@@ -7,7 +7,23 @@ import numpy as np
 df = pd.read_csv('medical_examination.csv')
 
 # Add 'overweight' column
-df['overweight'] = None
+def calc_overweight(height_cm, weight_kg):
+    """
+    Calculates the weight status based on BMI.
+
+    Args:
+    height_cm (float) - Height in cm
+    weight_kg (float) - Weight in kg
+
+    Returns:
+    int: 1 if overweight, otherwise 0
+    """
+    height_m = height_cm / 100
+    bmi = weight_kg / (height_m ** 2)
+    # Return 1 if True , 0 if False
+    return int(bmi > 25)  
+
+df['overweight'] = df.apply(lambda row: calc_overweight(row['height'],row['weight']), axis=1)
 
 # Normalize data by making 0 always good and 1 always bad. If the value of 'cholesterol' or 'gluc' is 1, make the value 0. If the value is more than 1, make the value 1.
 
