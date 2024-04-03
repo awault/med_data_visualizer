@@ -48,27 +48,30 @@ def draw_cat_plot():
     fig.savefig('catplot.png')
     return fig
 
-
 # Draw Heat Map
 def draw_heat_map():
-    # Clean the data
-    df_heat = None
+    # Remove Outliers
+    bp_bool = df['ap_lo'] <= df['ap_hi']
+    short_bool = df['height'] >= df['height'].quantile(0.025)
+    tall_bool = df['height'] <= df['height'].quantile(0.975)
+    uw_bool = df['weight']  >= df['weight'].quantile(.025)
+    ow_bool = df['weight'] <= df['weight'].quantile(.975)
+
+    df_heat = df[bp_bool & short_bool & tall_bool & uw_bool & ow_bool]
 
     # Calculate the correlation matrix
-    corr = None
+    corr = df_heat.corr()
 
     # Generate a mask for the upper triangle
-    mask = None
-
-
+    mask = np.triu(np.ones_like(corr, dtype=bool))
 
     # Set up the matplotlib figure
-    fig, ax = None
+    fig, ax = plt.subplots(figsize=(11,9))
 
     # Draw the heatmap with 'sns.heatmap()'
-
-
-
+    sns.heatmap(corr, mask=mask, annot=True, fmt='.1f', cmap='coolwarm', center=0,\
+                square=True, linewidths=.5, cbar_kws={"shrink": .5})
+    
     # Do not modify the next two lines
     fig.savefig('heatmap.png')
     return fig
